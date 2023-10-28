@@ -1,0 +1,14 @@
+version: '3.8'
+
+services:
+  mongodb:
+    restart: always
+    image: mongo:latest
+    container_name: basic-enrollment
+    ports:
+      - "4004:27017"
+    volumes:
+      - ./init-data.js:/docker-entrypoint-initdb.d/init-data.js
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: admin
+      MONGO_INITDB_ROOT_PASSWORD: password123
