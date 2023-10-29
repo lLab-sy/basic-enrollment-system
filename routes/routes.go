@@ -23,6 +23,7 @@ func SetupRoutes(mongoClient *mongo.Client) {
 	apiRouter := httpRouter.router.Group("/api")
 	httpRouter.AddTeacherRoutes(apiRouter, mongoClient)
 	httpRouter.AddStudentRoutes(apiRouter, mongoClient)
+	httpRouter.AddCourseRoutes(apiRouter, mongoClient)
 
 	apiRouter.GET("/health", func(c *gin.Context) {
 		c.JSON(200, gin.H{
@@ -58,4 +59,17 @@ func (r routes) AddStudentRoutes(rg *gin.RouterGroup, mongoClient *mongo.Client)
 	studentRouter.POST("/", studentController.CreateStudentData)
 	studentRouter.PATCH("/:id", studentController.EditStudentData)
 	studentRouter.DELETE("/:id", studentController.DeleteStudentData)
+}
+
+func (r routes) AddCourseRoutes(rg *gin.RouterGroup, mongoClient *mongo.Client) {
+	courseRepository := repository.NewCourseRepository(mongoClient)
+	courseService := service.NewCourseService(courseRepository)
+	courseController := controller.NewCourseController(courseService)
+	courseRouter := rg.Group("course")
+
+	courseRouter.GET("/", courseController.GetAllCourseData)
+	courseRouter.GET("/:id", courseController.GetOneCourseData)
+	courseRouter.POST("/", courseController.CreateCourseData)
+	courseRouter.PATCH("/:id", courseController.EditCourseData)
+	courseRouter.DELETE("/:id", courseController.DeleteCourseData)
 }
