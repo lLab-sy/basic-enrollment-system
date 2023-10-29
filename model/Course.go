@@ -16,7 +16,7 @@ type Section struct {
 }
 
 type Course struct {
-	Id            int       `json:"_id,omitempty"  bson:"_id,omitempty"`
+	Id            string    `json:"_id,omitempty"  bson:"_id,omitempty"`
 	Name          string    `json:"name,omitempty"  bson:"name,omitempty"`
 	Teachers      []int     `json:"teachers,omitempty"  bson:"teachers,omitempty"`
 	StudySystem   []string  `json:"study_system,omitempty"  bson:"study_system,omitempty"`

@@ -19,4 +19,5 @@ func main() {
 	routes.SetupRoutes(mongoClient)
 
 	fmt.Println("hello db")
+
 }
