@@ -1,0 +1,9 @@
+root = "." # Specify the root directory of your project
+
+[build]
+  binary = "main" # Name of your main Go file (without the .go extension)
+  exclude = ["Diagram", "templates"] # Directories to exclude from monitoring
+  cmd = ["go", "run", "main.go"] # Command to run your Go application
+
+[log]
+  format = "color"

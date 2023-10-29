@@ -2,6 +2,7 @@ package main
 
 import (
 	"Basic-Enrollment-System/config"
+	"Basic-Enrollment-System/routes"
 	"fmt"
 	"log"
 
@@ -14,6 +15,8 @@ func main() {
 		log.Fatal("Error loading .env file")
 	}
 
-	config.DBConnect()
-	fmt.Printf("hello db")
+	mongoClient := config.DBConnect()
+	routes.SetupRoutes(mongoClient)
+
+	fmt.Println("hello db")
 }

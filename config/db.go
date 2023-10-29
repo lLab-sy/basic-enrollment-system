@@ -24,7 +24,7 @@ func DBConnect() *mongo.Client {
 }
 
 func GetCollection(client *mongo.Client, collectionName string) *mongo.Collection {
-	return client.Database("tumorBoard").Collection(collectionName)
+	return client.Database("test").Collection(collectionName)
 }
 
 func AddIndex(client *mongo.Client, collection string, indexKeys interface{}) (*mongo.Collection, error) {
