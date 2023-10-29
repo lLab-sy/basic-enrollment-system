@@ -4,8 +4,6 @@ import (
 	"Basic-Enrollment-System/controller"
 	"Basic-Enrollment-System/repository"
 	"Basic-Enrollment-System/service"
-	"fmt"
-	"log"
 	"os"
 
 	"github.com/gin-gonic/gin"
@@ -18,13 +16,13 @@ type routes struct {
 
 func SetupRoutes(mongoClient *mongo.Client) {
 	// Create a new Gin router
-	log.Println("check")
 	httpRouter := routes{
 		router: gin.Default(),
 	}
 
 	apiRouter := httpRouter.router.Group("/api")
 	httpRouter.AddTeacherRoutes(apiRouter, mongoClient)
+	httpRouter.AddStudentRoutes(apiRouter, mongoClient)
 
 	apiRouter.GET("/health", func(c *gin.Context) {
 		c.JSON(200, gin.H{
@@ -37,7 +35,6 @@ func SetupRoutes(mongoClient *mongo.Client) {
 }
 
 func (r routes) AddTeacherRoutes(rg *gin.RouterGroup, mongoClient *mongo.Client) {
-	fmt.Println("not error na")
 	teacherRepository := repository.NewTeacherRepository(mongoClient)
 	teacherService := service.NewTeacherService(teacherRepository)
 	teacherController := controller.NewTeacherController(teacherService)
@@ -48,4 +45,17 @@ func (r routes) AddTeacherRoutes(rg *gin.RouterGroup, mongoClient *mongo.Client)
 	teacherRouter.POST("/", teacherController.CreateTeacherData)
 	teacherRouter.PATCH("/:id", teacherController.EditTeacherData)
 	teacherRouter.DELETE("/:id", teacherController.DeleteTeacherData)
+}
+
+func (r routes) AddStudentRoutes(rg *gin.RouterGroup, mongoClient *mongo.Client) {
+	studentRepository := repository.NewStudentRepository(mongoClient)
+	studentService := service.NewStudentService(studentRepository)
+	studentController := controller.NewStudentController(studentService)
+	studentRouter := rg.Group("student")
+
+	studentRouter.GET("/", studentController.GetAllStudentData)
+	studentRouter.GET("/:id", studentController.GetOneStudentData)
+	studentRouter.POST("/", studentController.CreateStudentData)
+	studentRouter.PATCH("/:id", studentController.EditStudentData)
+	studentRouter.DELETE("/:id", studentController.DeleteStudentData)
 }
