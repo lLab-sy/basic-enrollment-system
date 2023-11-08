@@ -5,6 +5,7 @@ import (
 	"Basic-Enrollment-System/model"
 	"context"
 	"fmt"
+	"log"
 	"strconv"
 	"time"
 
@@ -20,6 +21,7 @@ type TeacherRepository interface {
 	CreateTeacherData(model.Teacher) (*model.Teacher, error)
 	EditTeacherData(primitive.ObjectID, *model.Teacher) (*model.Teacher, error)
 	DeleteTeacherData(primitive.ObjectID) (*model.Teacher, error)
+	GetAllTeacherByFacultyName(string) ([]model.Teacher, error)
 }
 
 type teacherRepository struct {
@@ -143,4 +145,25 @@ func (r teacherRepository) DeleteTeacherData(id primitive.ObjectID) (*model.Teac
 		return nil, err
 	}
 	return &result, nil
+}
+
+func (r teacherRepository) GetAllTeacherByFacultyName(facultyName string) ([]model.Teacher, error) {
+	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
+	defer cancel()
+
+	filter := bson.D{{Key: "faculty", Value: facultyName}}
+
+	cursor, err := r.teacherCollection.Find(ctx, filter)
+	if err != nil {
+		return []model.Teacher{}, err
+	}
+	defer cursor.Close(ctx)
+
+	// Iterate over the results
+	var results []model.Teacher
+	if err = cursor.All(ctx, &results); err != nil {
+		log.Fatal(err)
+	}
+
+	return results, nil
 }

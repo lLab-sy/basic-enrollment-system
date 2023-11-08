@@ -21,7 +21,7 @@ type StudentRepository interface {
 	CreateStudentData(model.Student) (*model.Student, error)
 	EditStudentData(primitive.ObjectID, *model.Student) (*model.Student, error)
 	DeleteStudentData(primitive.ObjectID) (*model.Student, error)
-	GetAllByFacultyName(string) ([]model.Teacher, error)
+	GetAllStudentByFacultyName(string) ([]model.Student, error)
 }
 
 type studentRepository struct {
@@ -147,7 +147,7 @@ func (r studentRepository) DeleteStudentData(id primitive.ObjectID) (*model.Stud
 	return &result, nil
 }
 
-func (r studentRepository) GetAllByFacultyName(facultyName string) ([]model.Teacher, error) {
+func (r studentRepository) GetAllStudentByFacultyName(facultyName string) ([]model.Student, error) {
 	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
 	defer cancel()
 
@@ -155,12 +155,12 @@ func (r studentRepository) GetAllByFacultyName(facultyName string) ([]model.Teac
 
 	cursor, err := r.studentCollection.Find(ctx, filter)
 	if err != nil {
-		return []model.Teacher{}, err
+		return []model.Student{}, err
 	}
 	defer cursor.Close(ctx)
 
 	// Iterate over the results
-	var results []model.Teacher
+	var results []model.Student
 	if err = cursor.All(ctx, &results); err != nil {
 		log.Fatal(err)
 	}
